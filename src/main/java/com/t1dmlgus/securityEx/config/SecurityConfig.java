@@ -19,6 +19,11 @@ import org.springframework.security.core.userdetails.User;
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
+    private final CustomAuthDetails customAuthDetails;
+
+    public SecurityConfig(CustomAuthDetails customAuthDetails) {
+        this.customAuthDetails = customAuthDetails;
+    }
 
     @Bean
     RoleHierarchy roleHierarchy(){
@@ -38,6 +43,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .loginPage("/login").permitAll()
                 .defaultSuccessUrl("/", false)
                 .failureUrl("/login-error")
+                .authenticationDetailsSource(customAuthDetails)
                 .and()
                 .logout().logoutSuccessUrl("/")
                 .and()

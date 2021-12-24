@@ -1,56 +1,55 @@
 package com.t1dmlgus.securityEx.controller;
 
+
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.ResponseBody;
 
-
-@RestController
+@Controller
 public class IndexController {
 
     @GetMapping("/")
-    public String index(){
+    public String main(){
         return "index";
     }
 
-
-    @GetMapping("/auth")
-    public Authentication auth(){
-        return SecurityContextHolder.getContext()
-                .getAuthentication();
-    }
-
-
-    @PreAuthorize("hasAnyAuthority('ROLE_USER')")
-    @GetMapping("/user")
-    public SecurityMessage user() {
-        return SecurityMessage.builder()
-                .auth(SecurityContextHolder.getContext().getAuthentication())
-                .message("user 정보")
-                .build();
-    }
-
-    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN')")
-    @GetMapping("/admin")
-    public SecurityMessage admin(){
-        return SecurityMessage.builder()
-                .auth(SecurityContextHolder.getContext().getAuthentication())
-                .message("admin 정보")
-                .build();
-    }
-
-
-    @GetMapping("/loginForm")
-    public String loginForm(){
+    @GetMapping("/login")
+    public String login(){
         return "loginForm";
     }
 
-    @GetMapping("/join")
-    public String join(){
-        return "join";
+    @GetMapping("/login-error")
+    public String loginError(Model model){
+        model.addAttribute("loginError", true);
+        return "loginForm";
+    }
+
+    @GetMapping("/access-denied")
+    public String accessDenied(){
+        return "AccessDenied";
+    }
+
+    @PreAuthorize("hasAnyAuthority('ROLE_USER')")
+    @GetMapping("/user-page")
+    public String userPage(){
+        return "UserPage";
+    }
+
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN')")
+    @GetMapping("/admin-page")
+    public String adminPage(){
+        return "AdminPage";
+    }
+
+
+    @ResponseBody
+    @GetMapping("/auth")
+    public Authentication auth(){
+        return SecurityContextHolder.getContext().getAuthentication();
     }
 
 }
